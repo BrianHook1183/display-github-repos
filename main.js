@@ -18,10 +18,20 @@ function getRepos(userHandle) {
       console.log(endpointUrl);
   fetch(endpointUrl)
     .then(response => response.json())
-    .then(responseJson => console.log(responseJson));
+    .then(responseJson => displayRepos(responseJson))
+    // .catch
+    ;
 }
 
-
+function displayRepos(responseJson) {
+  $('.results').empty();
+  for (let i = 0; i < responseJson.length ; i++) {
+    const repoUrl= responseJson[i].html_url;
+    const repoName= responseJson[i].name;
+    $('.results').append(
+    `<li><a href="${repoUrl}" target="blank">${repoName}</a></li>`
+  )};
+}
 
 
 
