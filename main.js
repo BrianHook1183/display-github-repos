@@ -1,30 +1,30 @@
-
-
-
-
 function formListening () {
   $('form').submit(event => {
     event.preventDefault();
-        console.log('submit captured');
+    $('.results').empty();
     const userHandle= $('input').val();
-        console.log(userHandle);
     getRepos(userHandle);
 
   });
 }
 
 function getRepos(userHandle) {
+  console.log('getRepos ran');
   const endpointUrl= `https://api.github.com/users/${userHandle}/repos`;
-      console.log(endpointUrl);
   fetch(endpointUrl)
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok) {
+        console.log('username was not found');
+        } else {
+        return response.json();
+        }
+    })
     .then(responseJson => displayRepos(responseJson))
-    // .catch
-    ;
+    .catch(error => alert('Something went wrong. Make sure you entered a valid GitHub user handle.'));
 }
 
 function displayRepos(responseJson) {
-  $('.results').empty();
+  console.log('displayRepos ran')
   for (let i = 0; i < responseJson.length ; i++) {
     const repoUrl= responseJson[i].html_url;
     const repoName= responseJson[i].name;
@@ -32,7 +32,5 @@ function displayRepos(responseJson) {
     `<li><a href="${repoUrl}" target="blank">${repoName}</a></li>`
   )};
 }
-
-
 
 $(formListening);
